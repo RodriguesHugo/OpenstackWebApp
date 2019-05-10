@@ -5,16 +5,16 @@
  */
 
 //require('./bootstrap');
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Vuetify from 'vuetify'
-import store from './vuex.js'
+import Vue from "vue";
+import VueRouter from "vue-router";
+import Vuetify from "vuetify";
+import store from "./vuex.js";
 
-Vue.use(Vuetify)
-import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
+Vue.use(Vuetify);
+import "vuetify/dist/vuetify.min.css"; // Ensure you are using css-loader
 
-Vue.use(VueRouter)
-window.Vue = require('vue');
+Vue.use(VueRouter);
+window.Vue = require("vue");
 
 /**
  * The following block of code may be used to automatically register your
@@ -27,19 +27,37 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-Vue.component('navbar', require('./components/Navbar.vue').default);
-Vue.component('dashboard', require('./components/Dashboard.vue').default);
+Vue.component("navbar", require("./components/Navbar.vue").default);
+Vue.component("dashboard", require("./components/Dashboard.vue").default);
+Vue.component("instance", require("./components/Instance.vue").default);
 
-const exemplo = Vue.component('exemplo', require('./components/Exemplo.vue').default);
-
+const exemplo = Vue.component(
+    "exemplo",
+    require("./components/Exemplo.vue").default
+);
+const instance = Vue.component(
+    "instance",
+    require("./components/Instance.vue").default
+);
+const volume = Vue.component(
+    "volume",
+    require("./components/Volume.vue").default
+);
+const flavour = Vue.component(
+    "volumflavoure",
+    require("./components/Flavour.vue").default
+);
 const routes = [
-    { path: '/exemplo', component: exemplo, name: 'exemplo' },
-    { path: '/', name: 'home' }
-]
+    { path: "/exemplo", component: exemplo, name: "exemplo" },
+    { path: "/instance", component: instance, name: "instance" },
+    { path: "/volume", component: volume, name: "volume" },
+    { path: "/flavour", component: flavour, name: "flavour" },
+    { path: "/", name: "home" }
+];
 
 const router = new VueRouter({
     routes // short for `routes: routes`
-})
+});
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -48,7 +66,7 @@ const router = new VueRouter({
  */
 
 const app = new Vue({
-    el: '#app',
+    el: "#app",
     router,
     store
 });
