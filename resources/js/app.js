@@ -7,13 +7,12 @@
 //require('./bootstrap');
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Vuex from 'vuex'
 import Vuetify from 'vuetify'
+import store from './vuex.js'
 
 Vue.use(Vuetify)
 import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
 
-Vue.use(Vuex)
 Vue.use(VueRouter)
 window.Vue = require('vue');
 
@@ -29,6 +28,18 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
 Vue.component('navbar', require('./components/Navbar.vue').default);
+Vue.component('dashboard', require('./components/Dashboard.vue').default);
+
+const exemplo = Vue.component('exemplo', require('./components/Exemplo.vue').default);
+
+const routes = [
+    { path: '/exemplo', component: exemplo, name: 'exemplo' },
+    { path: '/', name: 'home' }
+]
+
+const router = new VueRouter({
+    routes // short for `routes: routes`
+})
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -38,4 +49,6 @@ Vue.component('navbar', require('./components/Navbar.vue').default);
 
 const app = new Vue({
     el: '#app',
+    router,
+    store
 });

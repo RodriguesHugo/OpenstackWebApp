@@ -17,6 +17,14 @@
         <div id="app">
             <v-app>
                 <navbar></navbar>
+                <dashboard></dashboard>
+                <v-content>
+                    <v-container fluid>
+                        <v-fade-transition mode="out-in">
+                            <router-view></router-view>
+                        </v-fade-transition>
+                    </v-container>
+                </v-content>
             </v-app> 
         </div>
         <div>
