@@ -18,9 +18,9 @@ export default {
   data() {
     return {
       items: [
-        { title: "Home", icon: "dashboard", route: { name: "home" } },
-        { title: "Instances", icon: "dashboard", route: { name: "instance" } },
-        { title: "Volumes", icon: "account_box", route: { name: "volume" } },
+        { title: "Home", icon: "home", route: { name: "home" } },
+        { title: "Instances", icon: "computer", route: { name: "instance" } },
+        { title: "Volumes", icon: "disc_full", route: { name: "volume" } },
         { title: "Flavours", icon: "gavel", route: { name: "flavour" } }
       ]
     };
