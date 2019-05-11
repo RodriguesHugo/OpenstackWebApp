@@ -67,8 +67,12 @@ class OpenStackController extends Controller
                 }'
             ]
         );
-        $token = $response->getHeaders()['X-Subject-Token'][0];
-        return $token;
+        if($response->session_status() == 200){
+            $token = $response->getHeaders()['X-Subject-Token'][0];
+            return $token;
+        }
+        return($response->error_get_last())
+        
     }
 
 

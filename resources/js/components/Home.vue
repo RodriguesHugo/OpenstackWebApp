@@ -35,6 +35,7 @@ export default {
           console.log(this.$store.state.token);
         })
         .catch(error => {
+          this.$store.commit("showError", error);
           console.log(error);
           console.log(error.response.data.message);
         });

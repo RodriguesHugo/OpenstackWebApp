@@ -29,7 +29,7 @@ window.Vue = require("vue");
 
 Vue.component("navbar", require("./components/Navbar.vue").default);
 Vue.component("dashboard", require("./components/Dashboard.vue").default);
-Vue.component("instance", require("./components/Instance.vue").default);
+Vue.component("alert", require("./components/Alert.vue").default);
 
 const exemplo = Vue.component(
     "exemplo",
@@ -87,5 +87,9 @@ const router = new VueRouter({
 const app = new Vue({
     el: "#app",
     router,
-    store
+    store,
+    data() {
+        return {
+        };
+    },
 });
