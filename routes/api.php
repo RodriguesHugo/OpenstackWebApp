@@ -18,3 +18,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('login', 'OpenStackController@login');
+Route::post('getVolumes', 'OpenStackController@getVolumes');
