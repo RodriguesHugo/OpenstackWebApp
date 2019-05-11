@@ -4,7 +4,7 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-//require('./bootstrap');
+require('./bootstrap');
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Vuetify from "vuetify";
@@ -74,7 +74,6 @@ const routes = [{
         name: "home"
     }
 ];
-const axios = require('axios');
 const router = new VueRouter({
     routes // short for `routes: routes`
 });
