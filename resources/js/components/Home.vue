@@ -2,7 +2,7 @@
   <v-container>
     <v-flex md4>
       <form>
-        <v-text-field v-model="email" label="E-mail" required></v-text-field>
+        <v-text-field v-model="name" label="Username" required></v-text-field>
       </form>
     </v-flex>
     <v-flex md4>
@@ -17,21 +17,22 @@
 export default {
   data() {
     return {
-      email: "",
+      name: "",
       password: ""
     };
   },
   methods: {
     login() {
       let credenciais = {
-        mail: this.email,
+        name: this.name,
         password: this.password
       };
-      console.log(credenciais);
+
       axios
-        .get("api/login", credenciais)
+        .post("api/login", credenciais)
         .then(response => {
-          console.log(response);
+          this.$store.commit("setToken", response.data);
+          console.log(this.$store.state.token);
         })
         .catch(error => {
           console.log(error);
