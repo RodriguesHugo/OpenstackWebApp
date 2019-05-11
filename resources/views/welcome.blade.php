@@ -25,10 +25,11 @@
                         </v-fade-transition>
                     </v-container>
                 </v-content>
-            </v-app> 
+            </v-app>
         </div>
         <div>
             <script src="{{ asset('js/app.js') }}"></script>
+            <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         </div>
     </body>
 </html>

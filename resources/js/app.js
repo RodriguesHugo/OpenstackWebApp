@@ -48,14 +48,33 @@ const flavour = Vue.component(
     require("./components/Flavour.vue").default
 );
 const home = Vue.component("home", require("./components/Home.vue").default);
-const routes = [
-    { path: "/exemplo", component: exemplo, name: "exemplo" },
-    { path: "/instance", component: instance, name: "instance" },
-    { path: "/volume", component: volume, name: "volume" },
-    { path: "/flavour", component: flavour, name: "flavour" },
-    { path: "/", component: home, name: "home" }
+const routes = [{
+        path: "/exemplo",
+        component: exemplo,
+        name: "exemplo"
+    },
+    {
+        path: "/instance",
+        component: instance,
+        name: "instance"
+    },
+    {
+        path: "/volume",
+        component: volume,
+        name: "volume"
+    },
+    {
+        path: "/flavour",
+        component: flavour,
+        name: "flavour"
+    },
+    {
+        path: "/",
+        component: home,
+        name: "home"
+    }
 ];
-
+const axios = require('axios');
 const router = new VueRouter({
     routes // short for `routes: routes`
 });

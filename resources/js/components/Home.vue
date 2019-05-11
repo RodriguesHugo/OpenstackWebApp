@@ -29,8 +29,10 @@ export default {
       };
       console.log(credenciais);
       axios
-        .post("api/login", credenciais)
-        .then(response => {})
+        .get("api/login", credenciais)
+        .then(response => {
+          console.log(response);
+        })
         .catch(error => {
           console.log(error);
           console.log(error.response.data.message);
