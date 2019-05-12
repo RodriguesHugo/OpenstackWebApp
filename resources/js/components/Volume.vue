@@ -4,6 +4,14 @@
       <template v-slot:no-data>
         <v-alert :value="true" color="error" icon="warning">No Volumes :(</v-alert>
       </template>
+      <template v-slot:items="props">
+        <td>{{ props.item.displayName }}</td>
+        <td>{{ props.item.id }}</td>
+        <td>{{ props.item.status }}</td>
+        <td>{{ props.item.volumeType }}</td>
+        <td>{{ props.item.createdAt }}</td>
+        <td>{{ props.item.size }} GiB</td>
+      </template>
     </v-data-table>
   </v-container>
 </template>
@@ -12,11 +20,8 @@ export default {
   data() {
     return {
       volumes: [
-        {
-          text: "Id",
-          sortable: false,
-          value: "id"
-        },
+        { text: "Name", value: "displayName" },
+        { text: "Id", sortable: false, value: "id" },
         { text: "Status", value: "status" },
         { text: "Volume Type", value: "volumeType" },
         { text: "CreatedAt", value: "createdAt" },
@@ -34,7 +39,8 @@ export default {
       axios
         .post("api/getVolumes", token)
         .then(response => {
-          console.log(response.data);
+          console.log(response.data.volumes);
+          this.desserts = response.data.volumes;
         })
         .catch(error => {
           console.log(error);
