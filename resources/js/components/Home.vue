@@ -32,12 +32,14 @@ export default {
         .post("api/login", credenciais)
         .then(response => {
           this.$store.commit("setToken", response.data);
+          this.$store.commit("showSuccess", "Login successfull");
+
           console.log(this.$store.state.token);
         })
         .catch(error => {
-          this.$store.commit("showError", error);
+          this.$store.commit("showError", "Login unsuccessfull");
+          this.$store.commit("clearToken");
           console.log(error);
-          console.log(error.response.data.message);
         });
     }
   }

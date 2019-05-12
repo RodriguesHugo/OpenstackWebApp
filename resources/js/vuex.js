@@ -18,16 +18,23 @@ const store = new Vuex.Store({
         setToken(state, token) {
             state.token = token;
         },
-        initAlert(state){
-            state.alert.snackbar = 'false';
+        clearToken(state) {
+            state.token = '';
         },
         showError(state, message) {
             state.alert.snackbar = 'false';
             state.alert.snackbar = 'true';
             state.alert.color = 'error';
             state.alert.text = message;
-            setTimeout(() => this.state.alert.snackbar = false, 6000);
-        }
+            setTimeout(() => state.alert.snackbar = false, 6000);
+        },
+        showSuccess(state, message) {
+            state.alert.snackbar = 'false';
+            state.alert.snackbar = 'true';
+            state.alert.color = 'success';
+            state.alert.text = message;
+            setTimeout(() => state.alert.snackbar = false, 6000);
+        },
 
     }
 });
