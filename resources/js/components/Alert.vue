@@ -18,13 +18,28 @@
 </template>
 <script>
 export default {
-    props:['snackbar','color','text'],
   data() {
-    return {      
-        timeout: 6000,
-        mode: '',
+    return {  
+      timeout: 6000,
+      mode: '',
     };
   },
+  computed:{
+    snackbar:{
+      get(){
+        return this.$store.state.alert.snackbar;
+      },
+      set(){
+        return ;
+      }
+    },
+    color(){
+      return this.$store.state.alert.color;
+    },
+    text(){
+      return this.$store.state.alert.text;
+    }
+  }
 };
 </script>
 

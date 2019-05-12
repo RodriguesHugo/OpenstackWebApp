@@ -22,9 +22,11 @@ const store = new Vuex.Store({
             state.alert.snackbar = 'false';
         },
         showError(state, message) {
+            state.alert.snackbar = 'false';
             state.alert.snackbar = 'true';
             state.alert.color = 'error';
             state.alert.text = message;
+            setTimeout(() => this.state.alert.snackbar = false, 6000);
         }
 
     }
