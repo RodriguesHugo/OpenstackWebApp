@@ -47,6 +47,10 @@ const flavour = Vue.component(
     "flavour",
     require("./components/Flavour.vue").default
 );
+const instance = Vue.component(
+    "instance",
+    require("./components/Instance.vue").default
+);
 const home = Vue.component("home", require("./components/Home.vue").default);
 const routes = [{
         path: "/exemplo",
@@ -72,6 +76,11 @@ const routes = [{
         path: "/",
         component: home,
         name: "home"
+    },
+    {
+        path: "/instance",
+        component: instance,
+        name: "instance"
     }
 ];
 const router = new VueRouter({

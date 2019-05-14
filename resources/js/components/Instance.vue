@@ -8,7 +8,8 @@
         <td>{{ props.item.name }}</td>
         <td>{{ props.item.id }}</td>
         <td>{{ props.item.status }}</td>
-        <td>{{ props.item.size }} bits</td>
+        <td>{{ props.item.key_name }}</td>
+        <td>{{ props.item.flavor.id }}</td>
       </template>
     </v-data-table>
   </v-container>
@@ -21,7 +22,8 @@ export default {
         { text: "Name", value: "name" },
         { text: "Id", sortable: false, value: "id" },
         { text: "Status", value: "status" },
-        { text: "Size", value: "size" }
+        { text: "Keys", value: "size" },
+        { text: "Flavour", value: "flavor.id" }
       ],
       desserts: [],
       token: ""
@@ -33,10 +35,10 @@ export default {
         token: this.$store.state.token
       };
       axios
-        .post("api/getImage", token)
+        .post("api/getInstances", token)
         .then(response => {
-          console.log(response.data.images);
-          this.desserts = response.data.images;
+          console.log(response.data.servers);
+          this.desserts = response.data.servers;
         })
         .catch(error => {
           console.log(error);

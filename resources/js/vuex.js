@@ -6,14 +6,14 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
     state: {
         token: '',
-        alert:{
-            snackbar: 'false',
+        alert: {
+            snackbar: null,
             color: '',
             text: ''
-    
+
         }
     },
-    
+
     mutations: {
         setToken(state, token) {
             state.token = token;

@@ -19,7 +19,12 @@ export default {
     return {
       items: [
         { title: "Home", icon: "home", route: { name: "home" } },
-        { title: "Image", icon: "computer", route: { name: "image" } },
+        { title: "Instance", icon: "computer", route: { name: "instance" } },
+        {
+          title: "Image",
+          icon: "check_box_outline_blank",
+          route: { name: "image" }
+        },
         { title: "Volumes", icon: "disc_full", route: { name: "volume" } },
         { title: "Flavours", icon: "gavel", route: { name: "flavour" } }
       ]

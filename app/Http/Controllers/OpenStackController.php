@@ -112,7 +112,7 @@ class OpenStackController extends Controller
         return response()->json($volumes);
     }
 
-    public function getInstances(Request $request)
+    public function getImage(Request $request)
     {
         $data = $request->validate([
             'token' => 'required',
@@ -141,6 +141,26 @@ class OpenStackController extends Controller
         $response = $client->request(
             'GET',
             'flavors/detail',
+            [
+                'headers' => [
+                    'X-Auth-Token' => '' . $data['token'] . ''
+                ],
+            ]
+        );
+        $intances = json_decode($response->getBody()->getContents());
+        return response()->json($intances);
+    }
+
+    public function getInstances(Request $request)
+    {
+        $data = $request->validate([
+            'token' => 'required',
+        ]);
+        $client = $this->makeClientNova();
+
+        $response = $client->request(
+            'GET',
+            'servers/detail',
             [
                 'headers' => [
                     'X-Auth-Token' => '' . $data['token'] . ''
