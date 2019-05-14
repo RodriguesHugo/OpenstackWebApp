@@ -7,9 +7,8 @@
       <template v-slot:items="props">
         <td>{{ props.item.name }}</td>
         <td>{{ props.item.id }}</td>
-        <td>{{ props.item.disk }} GB</td>
-        <td>{{ props.item.ram }} MB</td>
-        <td>{{ props.item.vcpus }} bits</td>
+        <td>{{ props.item.status }}</td>
+        <td>{{ props.item.size }} bits</td>
       </template>
     </v-data-table>
   </v-container>
@@ -21,9 +20,8 @@ export default {
       instances: [
         { text: "Name", value: "name" },
         { text: "Id", sortable: false, value: "id" },
-        { text: "Disk", value: "disk" },
-        { text: "Ram", value: "ram" },
-        { text: "VCpus", value: "vcpus" }
+        { text: "Status", value: "status" },
+        { text: "Size", value: "size" }
       ],
       desserts: [],
       token: ""
@@ -35,10 +33,10 @@ export default {
         token: this.$store.state.token
       };
       axios
-        .post("api/getFlavors", token)
+        .post("api/getInstances", token)
         .then(response => {
-          console.log(response.data.flavors);
-          this.desserts = response.data.flavors;
+          console.log(response.data.images);
+          this.desserts = response.data.images;
         })
         .catch(error => {
           console.log(error);

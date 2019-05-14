@@ -11,7 +11,7 @@ use Psy\Util\Json;
 
 class OpenStackController extends Controller
 {
-    private $ip = '46.101.65.213';
+    private $ip = '192.168.56.56';
 
     public function makeClient()
     {
@@ -27,6 +27,15 @@ class OpenStackController extends Controller
         return new Client([
             // Base URI is used with relative requests
             'base_uri' => 'http://' . $this->ip . '/compute/v2.1/',
+            // You can set any number of default request options.
+            'timeout' => 2.0,
+        ]);
+    }
+    public function makeClientImage()
+    {
+        return new Client([
+            // Base URI is used with relative requests
+            'base_uri' => 'http://' . $this->ip . '/image',
             // You can set any number of default request options.
             'timeout' => 2.0,
         ]);
@@ -62,6 +71,14 @@ class OpenStackController extends Controller
                                     "password":"' . $data['password'] . '"
                                 }
                             }
+                        },
+                        "scope": {
+                            "project": {
+                                "domain": {
+                                    "name": "Default"
+                                },
+                                "name": "' . $data['name'] . '"
+                            }
                         }
                     }
                 }'
@@ -69,7 +86,6 @@ class OpenStackController extends Controller
         );
         if ($response->GetStatusCode() == 201) {
             return $response->getHeaders()['X-Subject-Token'][0];
-             
         }
         return ($response->error_get_last());
     }
@@ -94,5 +110,44 @@ class OpenStackController extends Controller
         );
         $volumes = json_decode($response->getBody()->getContents());
         return response()->json($volumes);
+    }
+
+    public function getInstances(Request $request)
+    {
+        $data = $request->validate([
+            'token' => 'required',
+        ]);
+        $client = $this->makeClientImage();
+
+        $response = $client->request(
+            'GET',
+            '/image/v2/images',
+            [
+                'headers' => [
+                    'X-Auth-Token' => '' . $data['token'] . ''
+                ],
+            ]
+        );
+        $intances = json_decode($response->getBody()->getContents());
+        return response()->json($intances);
+    }
+
+    public function getFlavors(Request $request)
+    {
+        $data = $request->validate([
+            'token' => 'required',
+        ]);
+        $client = $this->makeClientNova();
+        $response = $client->request(
+            'GET',
+            'flavors/detail',
+            [
+                'headers' => [
+                    'X-Auth-Token' => '' . $data['token'] . ''
+                ],
+            ]
+        );
+        $intances = json_decode($response->getBody()->getContents());
+        return response()->json($intances);
     }
 }

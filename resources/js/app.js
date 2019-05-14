@@ -35,9 +35,9 @@ const exemplo = Vue.component(
     "exemplo",
     require("./components/Exemplo.vue").default
 );
-const instance = Vue.component(
-    "instance",
-    require("./components/Instance.vue").default
+const image = Vue.component(
+    "image",
+    require("./components/Image.vue").default
 );
 const volume = Vue.component(
     "volume",
@@ -54,9 +54,9 @@ const routes = [{
         name: "exemplo"
     },
     {
-        path: "/instance",
-        component: instance,
-        name: "instance"
+        path: "/image",
+        component: image,
+        name: "image"
     },
     {
         path: "/volume",
@@ -89,7 +89,6 @@ const app = new Vue({
     router,
     store,
     data() {
-        return {
-        };
+        return {};
     },
 });
