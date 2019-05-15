@@ -11,7 +11,7 @@ use Psy\Util\Json;
 
 class OpenStackController extends Controller
 {
-    private $ip = '192.168.56.56';
+    private $ip = '192.168.56.99';
 
     public function makeClient()
     {
