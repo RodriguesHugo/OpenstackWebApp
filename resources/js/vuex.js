@@ -6,6 +6,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
     state: {
         token: '',
+        userLoged: '',
         alert: {
             snackbar: null,
             color: '',
@@ -17,6 +18,9 @@ const store = new Vuex.Store({
     mutations: {
         setToken(state, token) {
             state.token = token;
+        },
+        setUserLoged(state, userLoged) {
+            state.userLoged = userLoged
         },
         clearToken(state) {
             state.token = '';

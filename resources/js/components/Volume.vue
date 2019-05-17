@@ -1,5 +1,7 @@
 <template>
   <v-container>
+    <v-btn small color="success" @click="createVolume()">Create</v-btn>
+
     <v-data-table :headers="volumes" :items="desserts" class="elevation-1">
       <template v-slot:no-data>
         <v-alert :value="true" color="error" icon="warning">No Volumes :(</v-alert>
@@ -25,13 +27,31 @@ export default {
         { text: "Status", value: "status" },
         { text: "Volume Type", value: "volumeType" },
         { text: "CreatedAt", value: "createdAt" },
-        { text: "Size", value: "size" }
+        { text: "Size", value: "size" },
+        { text: "Actions", value: "action" }
       ],
       desserts: [],
       token: ""
     };
   },
   methods: {
+    createVolume() {
+      let token = {
+        token: this.$store.state.token,
+        userLoginName: this.$store.state.userLoged
+      };
+      axios
+        .post("api/createVolume", token)
+        .then(response => {
+          console.log(response.data.volumes);
+          this.desserts = response.data.volumes;
+        })
+        .catch(error => {
+          console.log(error);
+          console.log(error.response.data.message);
+        });
+    },
+
     getVolumes() {
       let token = {
         token: this.$store.state.token
