@@ -19,7 +19,7 @@
                 <navbar></navbar>
                 <dashboard></dashboard>
                 <v-content>
-                    <alert :color="this.$store.state.alert.color" :text="this.$store.state.alert.text"></alert>
+                    <alert></alert>
                     <v-container fluid>
                         <v-fade-transition mode="out-in">
                             <router-view></router-view>

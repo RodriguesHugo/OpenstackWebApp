@@ -2,12 +2,12 @@
   <v-container>
     <v-flex md4>
       <form>
-        <v-text-field v-model="name" label="Username" required></v-text-field>
+        <v-text-field v-model="name" placeholder="Username" required></v-text-field>
       </form>
     </v-flex>
     <v-flex md4>
       <form>
-        <v-text-field v-model="password" label="Password" type="password" required></v-text-field>
+        <v-text-field v-model="password" placeholder="Password" type="password" required></v-text-field>
         <v-btn color="success" @click="login">Login</v-btn>
       </form>
     </v-flex>

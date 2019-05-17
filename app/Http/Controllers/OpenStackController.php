@@ -170,4 +170,9 @@ class OpenStackController extends Controller
         $intances = json_decode($response->getBody()->getContents());
         return response()->json($intances);
     }
+
+    public function createFlavour(Request $request)
+    {
+       
+    }
 }
