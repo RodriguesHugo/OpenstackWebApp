@@ -51,37 +51,37 @@ const instance = Vue.component(
     "instance",
     require("./components/Instance.vue").default
 );
-const home = Vue.component("home", require("./components/Home.vue").default);
+const login = Vue.component("login", require("./components/Login.vue").default);
 const routes = [{
-        path: "/exemplo",
-        component: exemplo,
-        name: "exemplo"
-    },
-    {
-        path: "/images",
-        component: images,
-        name: "images"
-    },
-    {
-        path: "/volume",
-        component: volume,
-        name: "volume"
-    },
-    {
-        path: "/flavour",
-        component: flavour,
-        name: "flavour"
-    },
-    {
-        path: "/",
-        component: home,
-        name: "home"
-    },
-    {
-        path: "/instance",
-        component: instance,
-        name: "instance"
-    }
+    path: "/exemplo",
+    component: exemplo,
+    name: "exemplo"
+},
+{
+    path: "/images",
+    component: images,
+    name: "images"
+},
+{
+    path: "/volume",
+    component: volume,
+    name: "volume"
+},
+{
+    path: "/flavour",
+    component: flavour,
+    name: "flavour"
+},
+{
+    path: "/",
+    component: login,
+    name: "login"
+},
+{
+    path: "/instance",
+    component: instance,
+    name: "instance"
+}
 ];
 const router = new VueRouter({
     routes // short for `routes: routes`

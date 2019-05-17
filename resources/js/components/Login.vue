@@ -8,8 +8,18 @@
     <v-flex md4>
       <form>
         <v-text-field v-model="password" placeholder="Password" type="password" required></v-text-field>
-        <v-btn color="success" @click="login">Login</v-btn>
       </form>
+      <v-btn color="success" @click="login">Login</v-btn>
+      <v-dialog v-model="dialog" max-width="290">
+        <v-card>
+          <v-overflow-btn :items="projects" label="Overflow Btn" target="#dropdown-example"></v-overflow-btn>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" flat="flat" @click="dialog = false">Disagree</v-btn>
+            <v-btn color="green darken-1" flat="flat" @click="dialog = false">Agree</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-flex>
   </v-container>
 </template>
@@ -18,7 +28,9 @@ export default {
   data() {
     return {
       name: "",
-      password: ""
+      password: "",
+      dialog: false,
+      projects: ['Arial', 'Calibri', 'Courier', 'Verdana']
     };
   },
   methods: {
@@ -27,6 +39,7 @@ export default {
         name: this.name,
         password: this.password
       };
+      this.dialog = true;
 
       axios
         .post("api/login", credenciais)
@@ -34,7 +47,6 @@ export default {
           this.$store.commit("setToken", response.data);
           this.$store.commit("setUserLoged", this.name);
           this.$store.commit("showSuccess", "Login successfull");
-
           console.log(this.$store.state.token);
         })
         .catch(error => {

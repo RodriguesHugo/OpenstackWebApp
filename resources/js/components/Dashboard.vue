@@ -18,7 +18,7 @@ export default {
   data() {
     return {
       items: [
-        { title: "Home", icon: "home", route: { name: "home" } },
+        { title: "Login", icon: "home", route: { name: "login" } },
         { title: "Instance", icon: "computer", route: { name: "instance" } },
         { title: "Images", icon: "check_box_outline_blank", route: { name: "images" } },
         { title: "Volumes", icon: "disc_full", route: { name: "volume" } },
