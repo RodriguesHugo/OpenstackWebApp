@@ -96,7 +96,6 @@ class OpenStackController extends Controller
         $data = $request->validate([
             'token' => 'required',
         ]);
-
         $client = $this->makeClientNova();
 
         $response = $client->request(
@@ -169,5 +168,35 @@ class OpenStackController extends Controller
         );
         $intances = json_decode($response->getBody()->getContents());
         return response()->json($intances);
+    }
+    public function createVolume(Request $request)
+    {
+
+        $data = $request->validate([
+            'token' => 'required',
+            'userLoginName' => 'required',
+        ]);
+
+        $client = $this->makeClient();
+
+        $response = $client->request(
+            'GET',
+            'v3/auth/projects',
+            [
+                'headers' => [
+                    'X-Auth-Token' => '' . $data['token'] . ''
+                ],
+            ]
+        );
+        $projects = json_decode($response->getBody()->getContents());
+        dd($project);
+        foreach ($projects->projects as $project) {
+            if ($project->name == $request->userLoginName) {
+                $projectId = $project->id;
+                break;
+            }
+        }
+        dd($projectId);
+        return response()->json($volumes);
     }
 }

@@ -32,6 +32,7 @@ export default {
         .post("api/login", credenciais)
         .then(response => {
           this.$store.commit("setToken", response.data);
+          this.$store.commit("setUserLoged", this.name);
           this.$store.commit("showSuccess", "Login successfull");
 
           console.log(this.$store.state.token);
