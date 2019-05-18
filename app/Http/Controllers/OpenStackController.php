@@ -81,10 +81,10 @@ class OpenStackController extends Controller
 
         if ($response->GetStatusCode() == 201) {
             $token = $response->getHeaders()['X-Subject-Token'][0];
-        }else{
+        } else {
             return ($response->error_get_last());
         }
-        
+
         $response = $client->request(
             'GET',
             'v3/auth/projects',
@@ -94,8 +94,57 @@ class OpenStackController extends Controller
                 ],
             ]
         );
-        $projects = json_decode($response->getBody()->getContents());       
+        $projects = json_decode($response->getBody()->getContents());
         return response()->json($projects->projects);
+    }
+
+    public function loginWithScope(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required',
+            'password' => 'required',
+            'projectId' => 'required'
+        ]);
+        $client = $this->makeClientLogin();
+        $response = $client->request(
+            'POST',
+            'v3/auth/tokens',
+            [
+                'headers' => [
+                    'Content-Type' => 'application/json'
+                ],
+                'body' =>
+                '{
+                    "auth": {
+                        "identity": {
+                            "methods": [
+                                "password"
+                            ],
+                            "password": {
+                                "user": {
+                                    "name":"' . $data['name'] . '",
+                                    "domain": {
+                                        "name": "Default"
+                                    },
+                                    "password":"' . $data['password'] . '"
+                                }
+                            }
+                        },
+                        "scope": {
+                            "project": {
+                                "id": "'.$data['projectId'].'"
+                            }
+                        }
+                    }
+                }'
+            ]
+        );
+
+        if ($response->GetStatusCode() == 201) {
+            return $response->getHeaders()['X-Subject-Token'][0];
+        } else {
+            return ($response->error_get_last());
+        }
     }
 
 
@@ -179,9 +228,7 @@ class OpenStackController extends Controller
     }
 
     public function createFlavour(Request $request)
-    {
-       
-    }
+    { }
     public function createVolume(Request $request)
     {
 

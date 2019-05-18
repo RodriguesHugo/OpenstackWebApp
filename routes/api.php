@@ -18,6 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('login', 'OpenStackController@login');
+Route::post('loginWithScope', 'OpenStackController@loginWithScope');
 Route::post('getVolumes', 'OpenStackController@getVolumes');
 Route::post('getInstances', 'OpenStackController@getInstances');
 Route::post('getImage', 'OpenStackController@getImage');

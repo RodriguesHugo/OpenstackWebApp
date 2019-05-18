@@ -7,6 +7,7 @@ const store = new Vuex.Store({
     state: {
         token: '',
         userLoged: '',
+        projId:'',
         alert: {
             snackbar: null,
             color: '',
@@ -18,6 +19,9 @@ const store = new Vuex.Store({
     mutations: {
         setToken(state, token) {
             state.token = token;
+        },
+        setProjId(state,projId){
+            state.projId = projId;
         },
         setUserLoged(state, userLoged) {
             state.userLoged = userLoged
