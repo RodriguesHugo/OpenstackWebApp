@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <v-btn small color="success" @click="createInstance">Create</v-btn>
     <v-data-table :headers="instances" :items="desserts" class="elevation-1">
       <template v-slot:no-data>
         <v-alert :value="true" color="error" icon="warning">No Instance:(</v-alert>
@@ -28,6 +29,7 @@ export default {
     };
   },
   methods: {
+    createInstance() {},
     getVolumes() {
       let token = {
         token: this.$store.state.token

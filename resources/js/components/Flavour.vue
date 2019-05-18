@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-btn small color="success" @click="createFlavour">Success</v-btn>
+    <v-btn small color="success" @click="createFlavour">Create</v-btn>
     <v-data-table :headers="headerTable" :items="flavours" class="elevation-1">
       <template v-slot:no-data>
         <v-alert :value="true" color="error" icon="warning">No Instance:(</v-alert>
@@ -46,15 +46,16 @@ export default {
           console.log(error.response.data.message);
         });
     },
-    createFlavour(){
+    createFlavour() {
       let flavour = {};
       console.log("PotatoFonso");
-      axios.post("api/createFlavour", flavour).then(response => {
-
-      }).catch(error => {
+      axios
+        .post("api/createFlavour", flavour)
+        .then(response => {})
+        .catch(error => {
           this.$store.commit("showError", "Erro a criar flavour");
           this.$store.commit("clearToken");
-      });
+        });
     }
   },
   mounted() {
