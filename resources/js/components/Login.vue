@@ -30,7 +30,7 @@ export default {
       name: "",
       password: "",
       dialog: false,
-      projects: ['Arial', 'Calibri', 'Courier', 'Verdana']
+      projects: []
     };
   },
   methods: {
@@ -39,15 +39,17 @@ export default {
         name: this.name,
         password: this.password
       };
-      this.dialog = true;
 
       axios
         .post("api/login", credenciais)
         .then(response => {
-          this.$store.commit("setToken", response.data);
-          this.$store.commit("setUserLoged", this.name);
-          this.$store.commit("showSuccess", "Login successfull");
-          console.log(this.$store.state.token);
+          // this.$store.commit("setToken", response.data);
+          // this.$store.commit("setUserLoged", this.name);
+          // this.$store.commit("showSuccess", "Login successfull");
+          // console.log(this.$store.state.token);
+          console.log(response.data);
+          this.dialog = true;
+
         })
         .catch(error => {
           this.$store.commit("showError", "Login unsuccessfull");

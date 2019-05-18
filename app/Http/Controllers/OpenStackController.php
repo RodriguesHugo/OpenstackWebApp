@@ -13,7 +13,7 @@ class OpenStackController extends Controller
 {
     private $ip = '192.168.56.99';
 
-    public function makeClient()
+    public function makeClientLogin()
     {
         return new Client([
             // Base URI is used with relative requests
@@ -47,7 +47,7 @@ class OpenStackController extends Controller
             'name' => 'required',
             'password' => 'required',
         ]);
-        $client = $this->makeClient();
+        $client = $this->makeClientLogin();
         $response = $client->request(
             'POST',
             'v3/auth/tokens',
@@ -71,23 +71,31 @@ class OpenStackController extends Controller
                                     "password":"' . $data['password'] . '"
                                 }
                             }
-                        },
-                        "scope": {
-                            "project": {
-                                "domain": {
-                                    "name": "Default"
-                                },
-                                "name": "' . $data['name'] . '"
-                            }
                         }
                     }
+                    
                 }'
             ]
         );
+        $token = '';
+
         if ($response->GetStatusCode() == 201) {
-            return $response->getHeaders()['X-Subject-Token'][0];
+            $token = $response->getHeaders()['X-Subject-Token'][0];
+        }else{
+            return ($response->error_get_last());
         }
-        return ($response->error_get_last());
+        
+        $response = $client->request(
+            'GET',
+            'v3/auth/projects',
+            [
+                'headers' => [
+                    'X-Auth-Token' => '' . $token . ''
+                ],
+            ]
+        );
+        $projects = json_decode($response->getBody()->getContents());       
+        return response()->json($projects->projects);
     }
 
 
