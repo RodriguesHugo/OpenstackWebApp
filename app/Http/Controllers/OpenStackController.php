@@ -216,6 +216,44 @@ class OpenStackController extends Controller
         return response()->json($intances);
     }
 
+    // public function createFlavor(Request $request)
+    // {
+    //     $data = $request->validate([
+    //         'name' => 'required',
+    //         'ram' => 'required',
+    //         'disk' => 'required',
+    //         'vcpus' => 'required',
+    //         'token' => 'required',
+    //         'descricao' => '',
+    //         'id' => ''
+    //     ]);
+    //     $client = $this->makeClientNova();
+    //     $response = $client->request(
+    //         'POST',
+    //         'flavors',
+    //         [
+    //             'headers' => [
+    //                 'X-Auth-Token' => '' . $data['token'] . '',
+    //                 'Content-Type' => 'application/json'
+    //             ],
+    //             'body' =>
+    //                 '{
+    //                     "flavor": {
+    //                         "name": "test_flavor",
+    //                         "ram": 1024,
+    //                         "vcpus": 2,
+    //                         "disk": 10,
+    //                         "id": "10",
+    //                         "rxtx_factor": 2.0,
+    //                         "description": "test description"
+    //                     }
+    //                 }'
+    //         ]
+    //     );
+    //     $flavors = json_decode($response->getBody()->getContents());
+    //     return response()->json($flavors);
+    // }
+
     public function getInstances(Request $request)
     {
         $data = $request->validate([

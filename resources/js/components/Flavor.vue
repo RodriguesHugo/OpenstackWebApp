@@ -1,7 +1,7 @@
 <template>
   <v-container>
-    <v-btn small color="success" @click="createFlavour">Create</v-btn>
-    <v-data-table :headers="headerTable" :items="flavours" class="elevation-1">
+    <!-- <v-btn small color="success" @click="createFlavor">Create</v-btn> -->
+    <v-data-table :headers="headerTable" :items="flavors" class="elevation-1">
       <template v-slot:no-data>
         <v-alert :value="true" color="error" icon="warning">No Instance:(</v-alert>
       </template>
@@ -26,37 +26,44 @@ export default {
         { text: "Ram", value: "ram" },
         { text: "VCpus", value: "vcpus" }
       ],
-      flavours: [],
-      token: ""
+      flavors: [],
     };
   },
   methods: {
     getVolumes() {
-      let token = {
-        token: this.$store.state.token
-      };
       axios
-        .post("api/getFlavours", token)
+        .post("api/getFlavors", {token:this.$store.state.token})
         .then(response => {
-          console.log(response.data.flavours);
-          this.flavours = response.data.flavours;
+          console.log(response.data.flavors);
+          this.flavors = response.data.flavors;
         })
         .catch(error => {
           console.log(error);
           console.log(error.response.data.message);
         });
     },
-    createFlavour() {
-      let flavour = {};
-      console.log("PotatoFonso");
-      axios
-        .post("api/createFlavour", flavour)
-        .then(response => {})
-        .catch(error => {
-          this.$store.commit("showError", "Erro a criar flavour");
-          this.$store.commit("clearToken");
-        });
-    }
+    // createFlavor() {
+    //   let flavor = 
+    //   {
+    //     token: this.$store.state.token,
+    //     name: "teste",
+    //     descricao: "opcional",
+    //     id:"stringOpcinal",
+    //     ram: 1024,
+    //     disk: 1,
+    //     vcpus: 1,
+
+    //   };
+    //   console.log('flavor enviado: ', flavor);
+    //   axios
+    //     .post("api/createFlavor", flavor)
+    //     .then(response => {
+    //       console.log(response.data);
+    //     })
+    //     .catch(error => {
+    //       this.$store.commit("showError", "Erro a criar flavor");
+    //     });
+    // }
   },
   mounted() {
     this.getVolumes();

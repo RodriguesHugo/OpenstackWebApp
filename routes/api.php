@@ -23,4 +23,5 @@ Route::post('getVolumes', 'OpenStackController@getVolumes');
 Route::post('getInstances', 'OpenStackController@getInstances');
 Route::post('getImage', 'OpenStackController@getImage');
 Route::post('getFlavors', 'OpenStackController@getFlavors');
+Route::post('createFlavor', 'OpenStackController@createFlavor');
 Route::post('createVolume', 'OpenStackController@createVolume');
