@@ -12,6 +12,15 @@ use Psy\Util\Json;
 class OpenStackController extends Controller
 {
     private $ip = '192.168.56.99';
+    public function makeClientBlockStorage($projectId)
+    {
+        return new Client([
+            // Base URI is used with relative requests
+            'base_uri' => 'http://' . $this->ip . '/volume/v3/' . $projectId . '/',
+            // You can set any number of default request options.
+            'timeout' => 2.0,
+        ]);
+    }
 
     public function makeClientLogin()
     {
@@ -73,7 +82,7 @@ class OpenStackController extends Controller
                             }
                         }
                     }
-                    
+
                 }'
             ]
         );
@@ -132,7 +141,7 @@ class OpenStackController extends Controller
                         },
                         "scope": {
                             "project": {
-                                "id": "'.$data['projectId'].'"
+                                "id": "' . $data['projectId'] . '"
                             }
                         }
                     }
@@ -234,29 +243,36 @@ class OpenStackController extends Controller
 
         $data = $request->validate([
             'token' => 'required',
-            'userLoginName' => 'required',
+            'projectId' => 'required',
         ]);
-
-        $client = $this->makeClient();
+        $client = $this->makeClientBlockStorage($data['projectId']);
 
         $response = $client->request(
-            'GET',
-            'v3/auth/projects',
+            'POST',
+            'volumes',
             [
                 'headers' => [
-                    'X-Auth-Token' => '' . $data['token'] . ''
+                    'X-Auth-Token' => '' . $data['token'] . '',
+                    'Content-Type' => 'application/json'
                 ],
+                'body' =>
+                '{
+                    "volume": {
+                        "size": 10,
+
+
+
+
+                        "name": "conas"
+
+
+
+                    }
+                }'
+
             ]
         );
-        $projects = json_decode($response->getBody()->getContents());
-        dd($project);
-        foreach ($projects->projects as $project) {
-            if ($project->name == $request->userLoginName) {
-                $projectId = $project->id;
-                break;
-            }
-        }
-        dd($projectId);
-        return response()->json($volumes);
+        $intances = json_decode($response->getBody()->getContents());
+        dd($intances);
     }
 }

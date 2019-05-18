@@ -12,7 +12,7 @@
       <v-btn color="success" @click="login">Login</v-btn>
       <v-dialog v-model="dialog" max-width="290">
         <v-card>
-          <v-select v-model="selectedProj" :items="projects" label="Standard"></v-select>
+          <v-select v-model="selectedProj" :items="projects" label="Projects"></v-select>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="green darken-1" flat="flat" @click="cancel()">Cancel</v-btn>

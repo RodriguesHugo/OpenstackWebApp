@@ -38,7 +38,7 @@ export default {
     createVolume() {
       let token = {
         token: this.$store.state.token,
-        userLoginName: this.$store.state.userLoged
+        projectId: this.$store.state.projId
       };
       axios
         .post("api/createVolume", token)
