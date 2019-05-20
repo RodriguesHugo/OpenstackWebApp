@@ -56,7 +56,7 @@ export default {
         })
         .catch(error => {
           this.$store.commit("showError", "Login unsuccessfull");
-          console.log(error);
+          return console.log(error);
         });
     },
     cancel() {
@@ -76,6 +76,7 @@ export default {
         this.$store.commit("setUserLoged", this.name);
         this.$store.commit("showSuccess", "Login successfull");
         this.dialog = false;
+        this.$router.push({ name: "instance" });
       });
     }
   }

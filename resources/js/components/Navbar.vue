@@ -4,15 +4,21 @@
 
     <v-spacer></v-spacer>
     <v-toolbar-items>
-      <v-btn flat :to="'/exemplo'">Logout</v-btn>
+      <v-btn flat :to="'/'" @click="logout" v-show="this.$store.state.token == ''">Login</v-btn>
+      <v-btn flat @click="logout" v-show="this.$store.state.token != ''">Logout</v-btn>
     </v-toolbar-items>
-    
   </v-toolbar>
 </template>
 <script>
-    export default {
-        mounted() {
-            console.log('Component mounted.')
-        }
+export default {
+  methods: {
+    logout() {
+      this.$store.commit("clearToken");
+      this.$router.push({name:"login"});
     }
+  },
+  mounted() {
+    console.log("Component mounted.");
+  }
+};
 </script>
