@@ -33,7 +33,7 @@ Vue.component("alert", require("./components/Alert.vue").default);
 
 const exemplo = Vue.component("exemplo", require("./components/Exemplo.vue").default);
 const images = Vue.component("images", require("./components/Images.vue").default);
-const volume = Vue.component("volume",require("./components/Volume.vue").default);
+const volume = Vue.component("volume", require("./components/Volume.vue").default);
 const flavor = Vue.component("flavor",
     require("./components/Flavor.vue").default
 );
@@ -42,36 +42,12 @@ const instance = Vue.component(
     require("./components/Instance.vue").default
 );
 const login = Vue.component("login", require("./components/Login.vue").default);
-const routes = [{
-    path: "/exemplo",
-    component: exemplo,
-    name: "exemplo"
-},
-{
-    path: "/images",
-    component: images,
-    name: "images"
-},
-{
-    path: "/volume",
-    component: volume,
-    name: "volume"
-},
-{
-    path: "/flavor",
-    component: flavor,
-    name: "flavor"
-},
-{
-    path: "/",
-    component: login,
-    name: "login"
-},
-{
-    path: "/instance",
-    component: instance,
-    name: "instance"
-}
+const routes = [
+    { path: "/images", component: images, name: "images" },
+    { path: "/volume", component: volume, name: "volume" },
+    { path: "/flavor", component: flavor, name: "flavor" },
+    { path: "/", component: login, name: "login" },
+    { path: "/instance", component: instance, name: "instance" }
 ];
 const router = new VueRouter({
     routes // short for `routes: routes`
@@ -90,4 +66,14 @@ const app = new Vue({
     data() {
         return {};
     },
+});
+
+router.beforeEach((to, from, next) => {
+    if ((to.name == 'images') || (to.name == 'volume') || (to.name == 'flavor') || (to.name == 'instance')) {
+        if (store.state.token == '') {
+            next('/');
+            return;
+        }
+    }
+    next();
 });
