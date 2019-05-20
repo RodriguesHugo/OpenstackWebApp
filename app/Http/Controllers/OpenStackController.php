@@ -44,7 +44,7 @@ class OpenStackController extends Controller
     {
         return new Client([
             // Base URI is used with relative requests
-            'base_uri' => 'http://' . $this->ip . '/image',
+            'base_uri' => 'http://' . $this->ip . '/image/',
             // You can set any number of default request options.
             'timeout' => 2.0,
         ]);
@@ -186,7 +186,7 @@ class OpenStackController extends Controller
 
         $response = $client->request(
             'GET',
-            '/image/v2/images',
+            'v2/images',
             [
                 'headers' => [
                     'X-Auth-Token' => '' . $data['token'] . ''
@@ -195,6 +195,12 @@ class OpenStackController extends Controller
         );
         $intances = json_decode($response->getBody()->getContents());
         return response()->json($intances);
+    }
+    public function createImage(Request $request)
+    {
+
+
+        return response()->json($image);
     }
 
     public function getFlavors(Request $request)
@@ -344,6 +350,8 @@ class OpenStackController extends Controller
         $data = $request->validate([
             'token' => 'required',
             'projectId' => 'required',
+            'volumeName' => 'required',
+            'volumeSize' => 'required|integer',
         ]);
         $client = $this->makeClientBlockStorage($data['projectId']);
 
@@ -358,12 +366,12 @@ class OpenStackController extends Controller
                 'body' =>
                 '{
                     "volume": {
-                        "size": 10,
+                        "size": ' . $request->volumeSize . ',
 
 
 
 
-                        "name": "conas"
+                        "name": "' . $request->volumeName . '"
 
 
 
@@ -372,7 +380,74 @@ class OpenStackController extends Controller
 
             ]
         );
-        $intances = json_decode($response->getBody()->getContents());
-        dd($intances);
+        $volume = json_decode($response->getBody()->getContents());
+        return response()->json($volume);
+    }
+
+    public function deleteVolume(Request $request)
+    {
+
+        $data = $request->validate([
+            'token' => 'required',
+            'projectId' => 'required',
+            'volumeId' => 'required',
+        ]);
+        $client = $this->makeClientBlockStorage($data['projectId']);
+
+        $response = $client->request(
+            'Delete',
+            'volumes/' . $request->volumeId . '',
+            [
+                'headers' => [
+                    'X-Auth-Token' => '' . $data['token'] . '',
+
+                ]
+            ]
+        );
+
+        return response()->json("Volume Deleted");
+    }
+    public function postImage(Request $request)
+    {
+
+        $data = $request->validate([
+            'token' => 'required',
+        ]);
+        $client = $this->makeClientImage();
+        $response = $client->request(
+            'POST',
+            'v2/images',
+            [
+                'headers' => [
+                    'X-Auth-Token' => '' . $data['token'] . '',
+                    'Content-Type' => 'application/json'
+                ],
+                'body' =>
+                '{
+
+                "container_format": "bare",
+                "disk_format": "iso",
+                "name": "' . $request->imageName . '"
+
+
+                }'
+            ]
+        );
+
+        $image = json_decode($response->getBody()->getContents());
+        $response = $client->request(
+            'PUT',
+            'v2/images/' . $image->id . '/stage',
+            [
+                'headers' => [
+                    'X-Auth-Token' => '' . $data['token'] . '',
+                    'Content-Type' => 'application/octet-stream'
+                ],
+                'body' =>
+                '{
+                    "X-Image-Meta-Store" : ' . $request->file . '
+                }'
+            ]
+        );
     }
 }
