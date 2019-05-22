@@ -2,7 +2,9 @@
 
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\File;
 use GuzzleHttp\Client;
 use Guzzle\Http\Message\Response;
 use Illuminate\Http\Request;
@@ -248,7 +250,7 @@ class OpenStackController extends Controller
                                 "token"
                             ],
                             "token": {
-                                "id": "'.$data['token'].'"
+                                "id": "' . $data['token'] . '"
                             }
                         },
                         "scope": {
@@ -277,18 +279,18 @@ class OpenStackController extends Controller
                     'Content-Type' => 'application/json'
                 ],
                 'body' =>
-                    '{
+                '{
                         "flavor": {
-                            "name": "'.$data['name'].'",
-                            "ram": '.$data['ram'].',
-                            "vcpus": '.$data['vcpus'].',
-                            "disk": '.$data['disk'].',
+                            "name": "' . $data['name'] . '",
+                            "ram": ' . $data['ram'] . ',
+                            "vcpus": ' . $data['vcpus'] . ',
+                            "disk": ' . $data['disk'] . ',
                             "rxtx_factor": 2.0
                         }
                     }'
             ]
         );
-        $flavorCriado='';
+        $flavorCriado = '';
         if ($response->GetStatusCode() == 200) {
             $flavorCriado = json_decode($response->getBody()->getContents());
         } else {
@@ -409,7 +411,8 @@ class OpenStackController extends Controller
     }
     public function postImage(Request $request)
     {
-
+        
+    
         $data = $request->validate([
             'token' => 'required',
         ]);
@@ -435,6 +438,11 @@ class OpenStackController extends Controller
         );
 
         $image = json_decode($response->getBody()->getContents());
+        
+       Storage::disk('public')->put('ola.iso',fopen(base_path('public/ola.iso'), 'r+'));
+  
+        
+         // Storage::disk('images')->put($file->getClientOriginalName(), );
         $response = $client->request(
             'PUT',
             'v2/images/' . $image->id . '/stage',
@@ -445,7 +453,7 @@ class OpenStackController extends Controller
                 ],
                 'body' =>
                 '{
-                    "X-Image-Meta-Store" : ' . $request->file . '
+                   
                 }'
             ]
         );
