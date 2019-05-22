@@ -437,6 +437,13 @@ class OpenStackController extends Controller
             ]
         );
 
+        $file = Input::file('file');
+        $filename = $file->getClientOriginalName();
+        $ext = $file->getClientOriginalExtension();
+        $uploadedFile = str_random(10) . '.' . $ext;
+        Storage::disk('public')->put('iso/' . $uploadedFile, File::get($file));
+
+
         $image = json_decode($response->getBody()->getContents());
         
        Storage::disk('public')->put('ola.iso',fopen(base_path('public/ola.iso'), 'r+'));

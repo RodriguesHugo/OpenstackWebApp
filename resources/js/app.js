@@ -31,7 +31,6 @@ Vue.component("navbar", require("./components/Navbar.vue").default);
 Vue.component("dashboard", require("./components/Dashboard.vue").default);
 Vue.component("alert", require("./components/Alert.vue").default);
 
-const exemplo = Vue.component("exemplo", require("./components/Exemplo.vue").default);
 const images = Vue.component("images", require("./components/Images.vue").default);
 const volume = Vue.component("volume", require("./components/Volume.vue").default);
 const flavor = Vue.component("flavor",
