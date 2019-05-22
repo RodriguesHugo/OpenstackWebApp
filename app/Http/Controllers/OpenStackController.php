@@ -2,13 +2,16 @@
 
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\File;
+use Illuminate\Http\UploadedFile;
 use GuzzleHttp\Client;
 use Guzzle\Http\Message\Response;
 use Illuminate\Http\Request;
 use function GuzzleHttp\json_decode;
+use GuzzleHttp\RequestOptions;
 use Psy\Util\Json;
 
 class OpenStackController extends Controller
@@ -33,7 +36,7 @@ class OpenStackController extends Controller
             'timeout' => 2.0,
         ]);
     }
-    public function makeClientNova()
+    public function makeClientCompute()
     {
         return new Client([
             // Base URI is used with relative requests
@@ -164,7 +167,7 @@ class OpenStackController extends Controller
         $data = $request->validate([
             'token' => 'required',
         ]);
-        $client = $this->makeClientNova();
+        $client = $this->makeClientCompute();
 
         $response = $client->request(
             'GET',
@@ -210,7 +213,7 @@ class OpenStackController extends Controller
         $data = $request->validate([
             'token' => 'required',
         ]);
-        $client = $this->makeClientNova();
+        $client = $this->makeClientCompute();
         $response = $client->request(
             'GET',
             'flavors/detail',
@@ -269,7 +272,7 @@ class OpenStackController extends Controller
         } else {
             return ($response->error_get_last());
         }
-        $client = $this->makeClientNova();
+        $client = $this->makeClientCompute();
         $response = $client->request(
             'POST',
             'flavors',
@@ -296,33 +299,7 @@ class OpenStackController extends Controller
         } else {
             return ($response->error_get_last());
         }
-        // $newClientLogin->request(
-        //     'POST',
-        //     'v3/auth/tokens',
-        //     [
-        //         'headers' => [
-        //             'Content-Type' => 'application/json'
-        //         ],
-        //         'body' =>
-        //         '{
-        //             "auth": {
-        //                 "identity": {
-        //                     "methods": [
-        //                         "token"
-        //                     ],
-        //                     "token": {
-        //                         "id": "'.$data['token'].'"
-        //                     }
-        //                 },
-        //                 "scope": {
-        //                     "project": {
-        //                         "id": "'.$data['projectId'].'"
-        //                     }
-        //                 }
-        //             }
-        //         }'
-        //     ]
-        // );
+
         return response()->json($flavorCriado);
     }
 
@@ -331,7 +308,7 @@ class OpenStackController extends Controller
         $data = $request->validate([
             'token' => 'required',
         ]);
-        $client = $this->makeClientNova();
+        $client = $this->makeClientCompute();
 
         $response = $client->request(
             'GET',
@@ -411,11 +388,12 @@ class OpenStackController extends Controller
     }
     public function postImage(Request $request)
     {
-        
-    
+
+
         $data = $request->validate([
             'token' => 'required',
         ]);
+        $request->file('file')->storeAs('',$request->imageName.'.iso');
         $client = $this->makeClientImage();
         $response = $client->request(
             'POST',
@@ -430,39 +408,58 @@ class OpenStackController extends Controller
 
                 "container_format": "bare",
                 "disk_format": "iso",
-                "name": "' . $request->imageName . '"
-
-
+                "name": "' . $request->imageName . '",
+                "min_disk": 1
                 }'
             ]
         );
-
-        $file = Input::file('file');
-        $filename = $file->getClientOriginalName();
-        $ext = $file->getClientOriginalExtension();
-        $uploadedFile = str_random(10) . '.' . $ext;
-        Storage::disk('public')->put('iso/' . $uploadedFile, File::get($file));
-
-
-        $image = json_decode($response->getBody()->getContents());
-        
-       Storage::disk('public')->put('ola.iso',fopen(base_path('public/ola.iso'), 'r+'));
-  
-        
-         // Storage::disk('images')->put($file->getClientOriginalName(), );
+        $imageCreated = json_decode($response->getBody()->getContents());
         $response = $client->request(
             'PUT',
-            'v2/images/' . $image->id . '/stage',
+            'v2/images/' . $imageCreated->id . '/file',
+            [
+                'timeout' => 10,
+                'headers' => [
+                        'X-Auth-Token' => '' . $data['token'] . '',
+                        'Content-Type' => 'application/octet-stream'
+                ],
+                    'multipart' => [
+                        [
+                            'name'     => 'image',
+                            'contents' => fopen('/home/vagrant/ProjetoLTI/fase2/storage/app/'.$request->imageName.'.iso','r')
+                        ]
+                    
+                    ]
+                
+                // 'headers' => [
+                //     'X-Auth-Token' => '' . $data['token'] . '',
+                //     'Content-Type' => 'application/octet-stream'
+                // ],
+                // 'body' => readfile($request->file) 
+            ]
+        );
+
+    }
+
+    public function deleteFlavor(Request $request)
+    {
+        $data = $request->validate([
+            'token' => 'required',
+            'flavorId' => 'required',
+        ]);
+        $client = $this->makeClientCompute();
+
+        $response = $client->request(
+            'Delete',
+            'flavors/' . $data['flavorId'] . '',
             [
                 'headers' => [
                     'X-Auth-Token' => '' . $data['token'] . '',
-                    'Content-Type' => 'application/octet-stream'
-                ],
-                'body' =>
-                '{
-                   
-                }'
+
+                ]
             ]
         );
+
+        return response()->json("Flavor Deleted");
     }
 }

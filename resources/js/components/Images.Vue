@@ -51,7 +51,7 @@
         </v-card>
       </v-dialog>
     </v-layout>
-    <v-data-table :headers="instances" :items="desserts" class="elevation-1">
+    <v-data-table :headers="headers" :items="images" class="elevation-1">
       <template v-slot:no-data>
         <v-alert :value="true" color="error" icon="warning">No Instance:(</v-alert>
       </template>
@@ -75,13 +75,13 @@ export default {
       },
       imageName: "",
       dialog: false,
-      instances: [
+      headers: [
         { text: "Name", value: "name" },
         { text: "Id", sortable: false, value: "id" },
         { text: "Status", value: "status" },
         { text: "Size", value: "size" }
       ],
-      desserts: [],
+      images: [],
       token: ""
     };
   },
@@ -113,7 +113,7 @@ export default {
         .post("api/getImage", token)
         .then(response => {
           console.log(response.data.images);
-          this.desserts = response.data.images;
+          this.images = response.data.images;
         })
         .catch(error => {
           console.log(error);

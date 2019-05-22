@@ -28,3 +28,4 @@ Route::post('createFlavor', 'OpenStackController@createFlavor');
 Route::post('createVolume', 'OpenStackController@createVolume');
 Route::post('deleteVolume', 'OpenStackController@deleteVolume');
 Route::post('postImage', 'OpenStackController@postImage');
+Route::post('deleteFlavor', 'OpenStackController@deleteFlavor');

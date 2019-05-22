@@ -30,7 +30,7 @@
       </v-dialog>
     </v-layout>
 
-    <v-data-table :headers="volumes" :items="desserts" class="elevation-1">
+    <v-data-table :headers="headers" :items="volumes" class="elevation-1">
       <template v-slot:no-data>
         <v-alert :value="true" color="error" icon="warning">No Volumes :(</v-alert>
       </template>
@@ -56,7 +56,7 @@ export default {
       volumeName: "",
       volumeSize: "",
       dialog: false,
-      volumes: [
+      headers: [
         { text: "Name", value: "displayName" },
         { text: "Id", sortable: false, value: "id" },
         { text: "Status", value: "status" },
@@ -65,7 +65,7 @@ export default {
         { text: "Size", value: "size" },
         { text: "Actions", value: "action" }
       ],
-      desserts: [],
+      volumes: [],
       token: ""
     };
   },
@@ -79,7 +79,6 @@ export default {
       axios
         .post("api/deleteVolume", token)
         .then(response => {
-          console.log(response);
           this.$store.commit("showSuccess", response.data);
           setTimeout(() => {
             this.getVolumes();
@@ -119,8 +118,7 @@ export default {
       axios
         .post("api/getVolumes", token)
         .then(response => {
-          console.log(response.data.volumes);
-          this.desserts = response.data.volumes;
+          this.volumes = response.data.volumes;
         })
         .catch(error => {
           console.log(error);

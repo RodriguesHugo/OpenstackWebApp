@@ -3,7 +3,7 @@
     <v-layout row>
       <v-dialog v-model="dialog" persistent max-width="600px">
         <template v-slot:activator="{ on }">
-          <v-btn color="primary" dark v-on="on">Create Flavor</v-btn>
+          <v-btn color="success" v-on="on">Create(Needs admin login)</v-btn>
         </template>
         <v-card>
           <v-card-title>
@@ -45,6 +45,9 @@
         <td>{{ props.item.disk }} GB</td>
         <td>{{ props.item.ram }} MB</td>
         <td>{{ props.item.vcpus }}</td>
+        <td>
+          <v-btn small color="error darken-1" @click="deleteFlavor(props.item.id)">Delete</v-btn>
+        </td>
       </template>
     </v-data-table>
   </v-container>
@@ -60,11 +63,10 @@ export default {
         { text: "Ram", value: "ram" },
         { text: "VCpus", value: "vcpus" },
         { text: "Actions", value: "actionW" }
-
       ],
       flavors: [],
       dialog: false,
-      flavorData: { name: '', ram: '', vcpu:'', disk:''}
+      flavorData: { name: "", ram: "", vcpu: "", disk: "" }
     };
   },
   methods: {
@@ -80,15 +82,13 @@ export default {
         });
     },
     createFlavor() {
-      let flavor =
-      {
+      let flavor = {
         token: this.$store.state.token,
         projectId: this.$store.state.projId,
         name: this.flavorData.name,
         ram: this.flavorData.ram,
         disk: this.flavorData.disk,
-        vcpus: this.flavorData.vcpu,
-
+        vcpus: this.flavorData.vcpu
       };
       axios
         .post("api/createFlavor", flavor)
@@ -98,6 +98,21 @@ export default {
         })
         .catch(error => {
           this.$store.commit("showError", "Erro a criar flavor");
+        });
+    },
+    deleteFlavor(flavorId) {
+      let credentials = {
+        token: this.$store.state.token,
+        flavorId: flavorId
+      };
+      axios
+        .post("api/deleteFlavor", credentials)
+        .then(response => {
+          this.$store.commit("showSuccess", response.data);
+          this.getFlavors();
+        })
+        .catch(error => {//só dá para fazer delete de um flavor com permissões de administrador
+          this.$store.commit("showError", "Only admins can delete flavors");
         });
     }
   },
