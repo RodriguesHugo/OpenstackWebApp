@@ -97,7 +97,7 @@ export default {
           this.dialog = false;
           this.$store.commit("showSuccess", "Volume Created");
           setTimeout(() => {
-            this.getVolumes();
+            this.getImages();
           }, 2000);
         })
         .catch(error => {
@@ -105,7 +105,7 @@ export default {
           console.log(error.response.data.message);
         });
     },
-    getVolumes() {
+    getImages() {
       let token = {
         token: this.$store.state.token
       };
@@ -169,7 +169,7 @@ export default {
     }
   },
   mounted() {
-    this.getVolumes();
+    this.getImages();
   }
 };
 </script>

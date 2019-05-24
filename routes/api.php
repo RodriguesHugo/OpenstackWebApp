@@ -29,3 +29,5 @@ Route::post('createVolume', 'OpenStackController@createVolume');
 Route::post('deleteVolume', 'OpenStackController@deleteVolume');
 Route::post('postImage', 'OpenStackController@postImage');
 Route::post('deleteFlavor', 'OpenStackController@deleteFlavor');
+Route::post('createInstance', 'OpenStackController@createInstance');
+Route::post('getNetworks', 'OpenStackController@getNetworks');

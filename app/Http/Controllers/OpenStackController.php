@@ -17,6 +17,16 @@ use Psy\Util\Json;
 class OpenStackController extends Controller
 {
     private $ip = '192.168.56.99';
+
+    public function makeClientNetwork()
+    {
+        return new Client([
+            // Base URI is used with relative requests
+            'base_uri' => 'http://' . $this->ip . ':9696/',
+            // You can set any number of default request options.
+            'timeout' => 2.0,
+        ]);
+    }
     public function makeClientBlockStorage($projectId)
     {
         return new Client([
@@ -423,19 +433,13 @@ class OpenStackController extends Controller
                         'X-Auth-Token' => '' . $data['token'] . '',
                         'Content-Type' => 'application/octet-stream'
                 ],
-                    'multipart' => [
-                        [
-                            'name'     => 'image',
-                            'contents' => fopen('/home/vagrant/ProjetoLTI/fase2/storage/app/'.$request->imageName.'.iso','r')
-                        ]
-                    
+                'multipart' => [
+                    [
+                        'name'     => 'image',
+                        'contents' => fopen('/home/vagrant/ProjetoLTI/fase2/storage/app/'.$request->imageName.'.iso','r')
                     ]
                 
-                // 'headers' => [
-                //     'X-Auth-Token' => '' . $data['token'] . '',
-                //     'Content-Type' => 'application/octet-stream'
-                // ],
-                // 'body' => readfile($request->file) 
+                ]
             ]
         );
 
@@ -462,4 +466,66 @@ class OpenStackController extends Controller
 
         return response()->json("Flavor Deleted");
     }
+
+    public function createInstance(Request $request)
+    {
+        $data = $request->validate([
+            'token' => 'required',
+            'name' => 'required',
+            'imageId' => 'required',
+            'flavorId' => 'required',
+            'networkId' => 'required'
+        ]);
+        $client = $this->makeClientCompute();
+
+        $response = $client->request(
+            'POST',
+            'servers',
+            [
+                'timeout' => 10,
+                'headers' => [
+                    'X-Auth-Token' => '' . $data['token'] . '',
+
+                ],
+                'body' => '{
+                    "server": {
+                        "name": "'.$data['name'].'",
+                        "imageRef": "'.$data['imageId'].'",
+                        "flavorRef": "'.$data['flavorId'].'",
+                        "networks": [{
+                            "uuid" : "'.$data['networkId'].'"
+                        }]
+                    }
+                }'
+            ]
+        );
+
+        dd($response);
+        if($response->getStatusCode()==='202'){
+            return response()->json("Instace created successfully");
+        }
+        return response()->json("Error creating instance");
+    }
+
+    public function getNetworks(Request $request)
+    {
+        $data = $request->validate([
+            'token' => 'required',
+        ]);
+        $client = $this->makeClientNetwork();
+
+        $response = $client->request(
+            'GET',
+            '/v2.0/networks',
+            [
+                'headers' => [
+                    'X-Auth-Token' => '' . $data['token'] . ''
+                ],
+            ]
+        );
+        $networks = json_decode($response->getBody()->getContents());
+        return response()->json($networks);
+    }
+    
 }
+
