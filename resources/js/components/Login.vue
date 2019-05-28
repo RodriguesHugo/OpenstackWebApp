@@ -50,7 +50,7 @@ export default {
         .then(response => {
           this.projects = response.data.map(proj => ({
             text: proj.name,
-            value: proj.id
+            value: {name: proj.name, id: proj.id}
           }));
           this.dialog = true;
         })
@@ -64,15 +64,15 @@ export default {
       this.name = "";
       this.password = "";
     },
-    loginWithProject(projId) {
+    loginWithProject(proj) {
       let credenciais = {
         name: this.name,
         password: this.password,
-        projectId: projId
+        projectId: proj.id
       };
       axios.post("api/loginWithScope", credenciais).then(response => {
         this.$store.commit("setToken", response.data);
-        this.$store.commit("setProjId", projId);
+        this.$store.commit("setProj", proj);
         this.$store.commit("setUserLoged", this.name);
         this.$store.commit("showSuccess", "Login successfull");
         this.dialog = false;
