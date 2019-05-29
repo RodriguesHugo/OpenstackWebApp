@@ -403,7 +403,7 @@ class OpenStackController extends Controller
         $data = $request->validate([
             'token' => 'required',
         ]);
-        $request->file('file')->storeAs('',$request->imageName.'.iso');
+        $request->file('file')->storeAs('', $request->imageName . '.iso');
         $client = $this->makeClientImage();
         $response = $client->request(
             'POST',
@@ -430,19 +430,18 @@ class OpenStackController extends Controller
             [
                 'timeout' => 10,
                 'headers' => [
-                        'X-Auth-Token' => '' . $data['token'] . '',
-                        'Content-Type' => 'application/octet-stream'
+                    'X-Auth-Token' => '' . $data['token'] . '',
+                    'Content-Type' => 'application/octet-stream'
                 ],
                 'multipart' => [
                     [
                         'name'     => 'image',
-                        'contents' => fopen('/home/vagrant/ProjetoLTI/fase2/storage/app/'.$request->imageName.'.iso','r')
+                        'contents' => fopen('/home/vagrant/ProjetoLTI/fase2/storage/app/' . $request->imageName . '.iso', 'r')
                     ]
-                
+
                 ]
             ]
         );
-
     }
 
     public function deleteFlavor(Request $request)
@@ -489,11 +488,11 @@ class OpenStackController extends Controller
                 ],
                 'body' => '{
                     "server": {
-                        "name": "'.$data['name'].'",
-                        "imageRef": "'.$data['imageId'].'",
-                        "flavorRef": "'.$data['flavorId'].'",
+                        "name": "' . $data['name'] . '",
+                        "imageRef": "' . $data['imageId'] . '",
+                        "flavorRef": "' . $data['flavorId'] . '",
                         "networks": [{
-                            "uuid" : "'.$data['networkId'].'"
+                            "uuid" : "' . $data['networkId'] . '"
                         }]
                     }
                 }'
@@ -501,7 +500,7 @@ class OpenStackController extends Controller
         );
 
         dd($response);
-        if($response->getStatusCode()==='202'){
+        if ($response->getStatusCode() === '202') {
             return response()->json("Instace created successfully");
         }
         return response()->json("Error creating instance");
@@ -526,6 +525,44 @@ class OpenStackController extends Controller
         $networks = json_decode($response->getBody()->getContents());
         return response()->json($networks);
     }
-    
+    public function changeProject(Request $request)
+    {
+        $data = $request->validate([
+            'token' => 'required',
+            'projectId' => 'required'
+        ]);
+        $newClientLogin = $this->makeClientLogin();
+        $response = $newClientLogin->request(
+            'POST',
+            'v3/auth/tokens',
+            [
+                'headers' => [
+                    'Content-Type' => 'application/json'
+                ],
+                'body' =>
+                '{
+                    "auth": {
+                        "identity": {
+                            "methods": [
+                                "token"
+                            ],
+                            "token": {
+                                "id": "' . $data['token'] . '"
+                            }
+                        },
+                        "scope": {
+                            "project": {
+                                "id": "'.$data['projectId'].'"
+                            }
+                        }
+                    }
+                }'
+            ]
+        );
+        if ($response->GetStatusCode() == 201) {
+            return $response->getHeaders()['X-Subject-Token'][0];
+        } else {
+            return ($response->error_get_last());
+        }
+    }
 }
-

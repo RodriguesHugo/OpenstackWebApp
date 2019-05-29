@@ -31,3 +31,4 @@ Route::post('postImage', 'OpenStackController@postImage');
 Route::post('deleteFlavor', 'OpenStackController@deleteFlavor');
 Route::post('createInstance', 'OpenStackController@createInstance');
 Route::post('getNetworks', 'OpenStackController@getNetworks');
+Route::post('changeProject', 'OpenStackController@changeProject');

@@ -8,6 +8,7 @@ const store = new Vuex.Store({
         token: '',
         userLoged: '',
         proj:{id: '', name: ''},
+        projs:[],
         alert: {
             snackbar: null,
             color: '',
@@ -23,6 +24,9 @@ const store = new Vuex.Store({
         setProj(state,proj){
             state.proj.id = proj.id;
             state.proj.name = proj.name;
+        },
+        setProjs(state,projs){
+            state.projs = projs;
         },
         setUserLoged(state, userLoged) {
             state.userLoged = userLoged
