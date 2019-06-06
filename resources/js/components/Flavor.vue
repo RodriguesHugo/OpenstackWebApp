@@ -19,7 +19,7 @@
                   <v-text-field v-model="flavorData.ram" label="Ram (MB)"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="flavorData.disk" label="Number of disks" required></v-text-field>
+                  <v-text-field v-model="flavorData.disk" label="Disk (GB)" required></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
                   <v-text-field v-model="flavorData.vcpu" label="Number of cpu's" required></v-text-field>
@@ -84,7 +84,7 @@ export default {
     createFlavor() {
       let flavor = {
         token: this.$store.state.token,
-        projectId: this.$store.state.projId,
+        projectId: this.$store.state.proj.id,
         name: this.flavorData.name,
         ram: this.flavorData.ram,
         disk: this.flavorData.disk,
@@ -111,7 +111,8 @@ export default {
           this.$store.commit("showSuccess", response.data);
           this.getFlavors();
         })
-        .catch(error => {//só dá para fazer delete de um flavor com permissões de administrador
+        .catch(error => {
+          //só dá para fazer delete de um flavor com permissões de administrador
           this.$store.commit("showError", "Only admins can delete flavors");
         });
     }

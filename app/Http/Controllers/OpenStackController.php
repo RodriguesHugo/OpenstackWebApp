@@ -11,12 +11,20 @@ use GuzzleHttp\Client;
 // use Guzzle\Http\Message\Response;
 use Illuminate\Http\Request;
 use function GuzzleHttp\json_decode;
+use Illuminate\Support\Arr;
+
 // use GuzzleHttp\RequestOptions;
 // use Psy\Util\Json;
 
 class OpenStackController extends Controller
 {
     private $ip = '192.168.56.99';
+    private $cirusID = 'af538e12-ab9e-4416-ada2-026d8f9b3029';
+    private $d1 = 'd1';
+    private $d3 = 'd3';
+    private $d4 = 'd4';
+    private $publicNetwork = '59bf10b7-6aea-4975-b085-73aa1770df0a';
+
 
     public function makeClientNetwork()
     {
@@ -584,12 +592,113 @@ class OpenStackController extends Controller
         );
 
         if ($response->GetStatusCode() == 204) {
-            // return response()->json("Instace deleted successfully");
-            return response()->json("Instance created successfully");
+            return response()->json("Instace deleted successfully");
+            // return response()->json("Deleted successfully");
         } elseif ($response->GetStatusCode() == 409) {
             return response()->json(["message" => "Cannot delete instance because state is locked"], 500);
         } else {
             return response()->json(["message" => "Error creating instance"], 500);
         }
+    }
+    public function createWebServer(Request $request)
+    {
+        $data = $request->validate([
+            'token' => 'required',
+            'projectId' => 'required',
+            'serverName' => 'required',
+            'sizeSelected' => 'required',
+        ]);
+
+
+
+        switch ($request->sizeSelected) {
+            case '5 GB':
+                $flavor = $this->d1;
+                break;
+            case '10 GB':
+                $flavor =  $this->d3;
+                break;
+            case '20 GB':
+                $flavor =  $this->d4;
+                break;
+        }
+
+        $client = $this->makeClientCompute();
+        $response = $client->request(
+            'POST',
+            'servers',
+            [
+                'timeout' => 10,
+                'headers' => [
+                    'X-Auth-Token' => '' . $data['token'] . '',
+
+                ],
+                'body' => '{
+                    "server": {
+                        "name": "service_' . $data['serverName'] . '",
+                        "imageRef": "' . $this->cirusID . '",
+                        "flavorRef": "' . $flavor . '",
+                        "networks": [{
+                            "uuid" : "' . $this->publicNetwork . '"
+                        }]
+                    }
+                }'
+            ]
+        );
+        $intances = json_decode($response->getBody()->getContents());
+        return response()->json("Instace created successfully");
+    }
+    public function getWebServer(Request $request)
+    {
+        $data = $request->validate([
+            'token' => 'required',
+        ]);
+        $client = $this->makeClientCompute();
+
+        $response = $client->request(
+            'GET',
+            'servers/detail',
+            [
+                'headers' => [
+                    'X-Auth-Token' => '' . $data['token'] . ''
+                ],
+            ]
+        );
+        $intances = json_decode($response->getBody()->getContents());
+
+
+
+        $parsedInstance = array();
+        foreach ($intances->servers as $instance) {
+
+            $split = explode("_", $instance->name);
+
+            if ($split && $split[0] == "service") {
+                array_push($parsedInstance, $instance);
+            }
+        }
+
+        return response()->json($parsedInstance, 200);
+    }
+    public function deleteImage(Request $request)
+    {
+        $data = $request->validate([
+            'token' => 'required',
+            'imageId' => 'required',
+        ]);
+        $client = $this->makeClientImage();
+
+        $response = $client->request(
+            'Delete',
+            'v2/images/' . $data['imageId'] . '',
+            [
+                'headers' => [
+                    'X-Auth-Token' => '' . $data['token'] . ''
+                ],
+            ]
+        );
+
+
+        return response()->json("Image Deleted");
     }
 }

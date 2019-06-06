@@ -19,9 +19,18 @@ export default {
     return {
       items: [
         { title: "Instance", icon: "computer", route: { name: "instance" } },
-        { title: "Images", icon: "check_box_outline_blank", route: { name: "images" } },
+        {
+          title: "Images",
+          icon: "check_box_outline_blank",
+          route: { name: "images" }
+        },
         { title: "Volumes", icon: "disc_full", route: { name: "volume" } },
-        { title: "Flavors", icon: "gavel", route: { name: "flavor" } }
+        { title: "Flavors", icon: "gavel", route: { name: "flavor" } },
+        {
+          title: "Add WebServer",
+          icon: "add_to_queue",
+          route: { name: "webserver" }
+        }
       ]
     };
   }

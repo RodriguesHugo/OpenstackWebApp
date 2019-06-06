@@ -40,13 +40,41 @@ const instance = Vue.component(
     "instance",
     require("./components/Instance.vue").default
 );
+const webserver = Vue.component(
+    "webserver",
+    require("./components/CreateWebServer.vue").default
+);
 const login = Vue.component("login", require("./components/Login.vue").default);
-const routes = [
-    { path: "/images", component: images, name: "images" },
-    { path: "/volume", component: volume, name: "volume" },
-    { path: "/flavor", component: flavor, name: "flavor" },
-    { path: "/", component: login, name: "login" },
-    { path: "/instance", component: instance, name: "instance" }
+const routes = [{
+        path: "/images",
+        component: images,
+        name: "images"
+    },
+    {
+        path: "/volume",
+        component: volume,
+        name: "volume"
+    },
+    {
+        path: "/flavor",
+        component: flavor,
+        name: "flavor"
+    },
+    {
+        path: "/",
+        component: login,
+        name: "login"
+    },
+    {
+        path: "/instance",
+        component: instance,
+        name: "instance"
+    },
+    {
+        path: "/webserver",
+        component: webserver,
+        name: "webserver"
+    },
 ];
 const router = new VueRouter({
     routes // short for `routes: routes`

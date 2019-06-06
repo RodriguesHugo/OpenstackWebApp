@@ -33,3 +33,6 @@ Route::post('createInstance', 'OpenStackController@createInstance');
 Route::post('getNetworks', 'OpenStackController@getNetworks');
 Route::post('changeProject', 'OpenStackController@changeProject');
 Route::post('deleteInstance', 'OpenStackController@deleteInstance');
+Route::post('createWebServer', 'OpenStackController@createWebServer');
+Route::post('getWebServer', 'OpenStackController@getWebServer');
+Route::post('deleteImage', 'OpenStackController@deleteImage');

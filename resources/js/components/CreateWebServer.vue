@@ -3,11 +3,11 @@
     <v-layout row>
       <v-dialog v-model="dialog" persistent max-width="600px">
         <template v-slot:activator="{ on }">
-          <v-btn color="success" v-on="on">Create</v-btn>
+          <v-btn color="success" v-on="on">Add</v-btn>
         </template>
         <v-card>
           <v-card-title>
-            <span class="headline">Volume Create</span>
+            <span class="headline">Add WebServer</span>
           </v-card-title>
           <v-card-text>
             <v-container grid-list-md>
@@ -15,8 +15,14 @@
                 <v-flex xs12 sm6 md6>
                   <v-text-field label="Name" v-model="volumeName" required></v-text-field>
                 </v-flex>
-                <v-flex xs12 sm6 md6>
-                  <v-text-field label="Size in GB" v-model="volumeSize" required></v-text-field>
+                <v-flex>
+                  <v-select
+                    v-model="sizeSelected"
+                    :items="sizes"
+                    hide-details
+                    label="Select Size"
+                    single-line
+                  ></v-select>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -32,17 +38,14 @@
 
     <v-data-table :headers="headers" :items="volumes" class="elevation-1">
       <template v-slot:no-data>
-        <v-alert :value="true" color="error" icon="warning">No Volumes :(</v-alert>
+        <v-alert :value="true" color="error" icon="warning">No Servers :(</v-alert>
       </template>
       <template v-slot:items="props">
-        <td>{{ props.item.displayName }}</td>
-        <td>{{ props.item.id }}</td>
+        <td>{{ props.item.name }}</td>
+        <td>{{ props.item.addresses.public[1].addr }}</td>
         <td>{{ props.item.status }}</td>
-        <td>{{ props.item.volumeType }}</td>
-        <td>{{ props.item.createdAt }}</td>
-        <td>{{ props.item.size }} GiB</td>
         <td>
-          <v-btn small color="error darken-1" @click="deleteVolume(props.item.id)">Delete</v-btn>
+          <v-btn small color="error darken-1" @click="deleteInstance(props.item.id)">Delete</v-btn>
         </td>
       </template>
     </v-data-table>
@@ -53,39 +56,37 @@ import { setTimeout } from "timers";
 export default {
   data() {
     return {
+      sizeSelected: "",
+      sizes: [{ text: "5 GB" }, { text: "10 GB" }, { text: "20 GB" }],
       volumeName: "",
       volumeSize: "",
       dialog: false,
       headers: [
-        { text: "Name", value: "displayName" },
-        { text: "Id", sortable: false, value: "id" },
+        { text: "Name", value: "name" },
+        { text: "Ipv4", value: "ipv4" },
         { text: "Status", value: "status" },
-        { text: "Volume Type", value: "volumeType" },
-        { text: "CreatedAt", value: "createdAt" },
-        { text: "Size", value: "size" },
-        { text: "Actions", value: "action" }
+        { text: "Actions" }
       ],
       volumes: [],
       token: ""
     };
   },
   methods: {
-    deleteVolume($id) {
-      let token = {
+    deleteInstance(instaceId) {
+      let credentials = {
         token: this.$store.state.token,
-        projectId: this.$store.state.proj.id,
-        volumeId: $id
+        instanceId: instaceId
       };
       axios
-        .post("api/deleteVolume", token)
+        .post("api/deleteInstance", credentials)
         .then(response => {
           this.$store.commit("showSuccess", response.data);
           setTimeout(() => {
-            this.getVolumes();
-          }, 2000);
+            this.getWebServer();
+          }, 15000);
         })
         .catch(error => {
-          console.log(error);
+          this.$store.commit("showError", error.response.data.message);
           console.log(error.response.data.message);
         });
     },
@@ -93,17 +94,17 @@ export default {
       let token = {
         token: this.$store.state.token,
         projectId: this.$store.state.proj.id,
-        volumeName: this.volumeName,
-        volumeSize: this.volumeSize
+        sizeSelected: this.sizeSelected,
+        serverName: this.volumeName
       };
       axios
-        .post("api/createVolume", token)
+        .post("api/createWebServer", token)
         .then(response => {
           this.dialog = false;
-          this.$store.commit("showSuccess", "Volume Created");
+          this.$store.commit("showSuccess", "WebServer Created");
           setTimeout(() => {
-            this.getVolumes();
-          }, 2000);
+            this.getWebServer();
+          }, 15000);
         })
         .catch(error => {
           console.log(error);
@@ -111,14 +112,15 @@ export default {
         });
     },
 
-    getVolumes() {
+    getWebServer() {
       let token = {
         token: this.$store.state.token
       };
       axios
-        .post("api/getVolumes", token)
+        .post("api/getWebServer", token)
         .then(response => {
-          this.volumes = response.data.volumes;
+          console.log(response.data);
+          this.volumes = response.data;
         })
         .catch(error => {
           console.log(error);
@@ -127,7 +129,7 @@ export default {
     }
   },
   mounted() {
-    this.getVolumes();
+    this.getWebServer();
   }
 };
 </script>

@@ -135,7 +135,6 @@ export default {
         .post("api/getInstances", token)
         .then(response => {
           this.instances = response.data.servers;
-          console.log(this.instances);
         })
         .catch(error => {
           this.$store.commit("showError", "Error geting instances");

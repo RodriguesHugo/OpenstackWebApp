@@ -60,6 +60,9 @@
         <td>{{ props.item.id }}</td>
         <td>{{ props.item.status }}</td>
         <td>{{ props.item.size }} bits</td>
+        <td>
+          <v-btn small color="error darken-1" @click="deleteImage(props.item.id)">Delete</v-btn>
+        </td>
       </template>
     </v-data-table>
   </v-container>
@@ -79,13 +82,31 @@ export default {
         { text: "Name", value: "name" },
         { text: "Id", sortable: false, value: "id" },
         { text: "Status", value: "status" },
-        { text: "Size", value: "size" }
+        { text: "Size", value: "size" },
+        { text: "Actions" }
       ],
       images: [],
       token: ""
     };
   },
   methods: {
+    deleteImage(id) {
+      let token = {
+        token: this.$store.state.token,
+        imageId: id
+      };
+      axios
+        .post("api/deleteImage", token)
+        .then(response => {
+          setTimeout(() => {
+            this.getImages();
+          }, 2000);
+        })
+        .catch(error => {
+          console.log(error);
+          console.log(error.response.data.message);
+        });
+    },
     createImage() {
       let token = {
         token: this.$store.state.token,
