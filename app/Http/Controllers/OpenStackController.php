@@ -3,16 +3,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\File;
-use Illuminate\Http\UploadedFile;
+// use Illuminate\Support\Facades\Storage;
+// use Illuminate\Support\Facades\Input;
+// use Illuminate\Support\Facades\File;
+// use Illuminate\Http\UploadedFile;
 use GuzzleHttp\Client;
-use Guzzle\Http\Message\Response;
+// use Guzzle\Http\Message\Response;
 use Illuminate\Http\Request;
 use function GuzzleHttp\json_decode;
-use GuzzleHttp\RequestOptions;
-use Psy\Util\Json;
+// use GuzzleHttp\RequestOptions;
+// use Psy\Util\Json;
 
 class OpenStackController extends Controller
 {
@@ -499,7 +499,6 @@ class OpenStackController extends Controller
             ]
         );
 
-        dd($response);
         if ($response->getStatusCode() === '202') {
             return response()->json("Instace created successfully");
         }
@@ -552,7 +551,7 @@ class OpenStackController extends Controller
                         },
                         "scope": {
                             "project": {
-                                "id": "'.$data['projectId'].'"
+                                "id": "' . $data['projectId'] . '"
                             }
                         }
                     }
@@ -563,6 +562,34 @@ class OpenStackController extends Controller
             return $response->getHeaders()['X-Subject-Token'][0];
         } else {
             return ($response->error_get_last());
+        }
+    }
+
+    public function deleteInstance(Request $request)
+    {
+        $data = $request->validate([
+            'token' => 'required',
+            'instanceId' => 'required'
+        ]);
+
+        $client = $this->makeClientCompute();
+        $response = $client->request(
+            'Delete',
+            'servers/' . $data['instanceId'],
+            [
+                'headers' => [
+                    'X-Auth-Token' => '' . $data['token'] . ''
+                ]
+            ]
+        );
+
+        if ($response->GetStatusCode() == 204) {
+            // return response()->json("Instace deleted successfully");
+            return response()->json("Instance created successfully");
+        } elseif ($response->GetStatusCode() == 409) {
+            return response()->json(["message" => "Cannot delete instance because state is locked"], 500);
+        } else {
+            return response()->json(["message" => "Error creating instance"], 500);
         }
     }
 }

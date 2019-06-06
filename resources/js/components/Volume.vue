@@ -73,7 +73,7 @@ export default {
     deleteVolume($id) {
       let token = {
         token: this.$store.state.token,
-        projectId: this.$store.state.projId,
+        projectId: this.$store.state.proj.id,
         volumeId: $id
       };
       axios
@@ -92,7 +92,7 @@ export default {
     createVolume() {
       let token = {
         token: this.$store.state.token,
-        projectId: this.$store.state.projId,
+        projectId: this.$store.state.proj.id,
         volumeName: this.volumeName,
         volumeSize: this.volumeSize
       };

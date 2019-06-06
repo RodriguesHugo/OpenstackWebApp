@@ -89,8 +89,21 @@ export default {
     };
   },
   methods: {
-    deleteInstance(instaceId){
-      console.log(instaceId);
+    deleteInstance(instaceId) {
+      let credentials = {
+        token: this.$store.state.token,
+        instanceId: instaceId
+      };
+      axios
+        .post("api/deleteInstance", credentials)
+        .then(response => {
+          this.$store.commit("showSuccess", response.data);
+          this.getInstances();
+        })
+        .catch(error => {
+          this.$store.commit("showError", error.response.data.message);
+          console.log(error.response.data.message);
+        });
     },
     createInstance() {
       let credentials = {
@@ -100,7 +113,6 @@ export default {
         flavorId: this.instanceData.flavorId,
         networkId: this.instanceData.networkId
       };
-      console.log(credentials);
       axios
         .post("api/createInstance", credentials)
         .then(response => {
